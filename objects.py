@@ -8,7 +8,7 @@ class User():
         self.votes = votes
 
     def __repr__(self):
-        return "User " + str(self.name) + " (" + str(self.user_id) + ")"
+        return "User " + str(self.name) + " (" + str(self.user_id).decode('utf-8') + ")"
 
 class Business():
     
@@ -28,7 +28,7 @@ class Business():
         self.open = open_
 
     def __repr__(self):
-        return "Business " + str(self.name) + " (" + str(self.business_id) + ")"
+        return "Business " + self.name.decode('utf-8') #+ " (" + self.business_id.decode('utf-8') + ")"
 
 class Review():
     
