@@ -1,4 +1,12 @@
-class User():
+class YelpObject():
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __unicode__(self):
+        return self.__unicode__()
+
+class User(YelpObject):
     
     def __init__(self, user_id=None, name=None, review_count=None, average_stars=None, votes=None):
         self.user_id = user_id
@@ -8,9 +16,12 @@ class User():
         self.votes = votes
 
     def __repr__(self):
-        return "User " + str(self.name) + " (" + str(self.user_id).decode('utf-8') + ")"
+        try:
+            return "User " + str(self.name) + " (" + str(self.user_id).decode('utf-8') + ")"
+        except:
+            return "User"
 
-class Business():
+class Business(YelpObject):
     
     def __init__(self, business_id=None, name=None, neighborhoods=None, average_stars=None, full_address=None, city=None, state=None, latitude=None, longitude=None, stars=None, review_count=None, categories=None, open_=None):
         self.business_id = business_id
@@ -28,9 +39,12 @@ class Business():
         self.open = open_
 
     def __repr__(self):
-        return "Business " + self.name.decode('utf-8') #+ " (" + self.business_id.decode('utf-8') + ")"
+        try:
+            return "Business " + str(self.name) + " (" + self.business_id.decode('utf-8') + ")"
+        except:
+            return "Business"
 
-class Review():
+class Review(YelpObject):
     
     def __init__(self, business_id=None, user_id=None, stars=None, text=None, date=None, votes=None):
         self.business_id = business_id
@@ -41,13 +55,19 @@ class Review():
         self.votes = votes
 
     def __repr__(self):
-        return "Review of " + str(self.business_id) + " by " + str(self.user_id)
+        try:
+            return "Review of " + str(self.business_id) + " by " + str(self.user_id)
+        except:
+            return "Review"
         
-class Checkin():
+class Checkin(YelpObject):
     
     def __init__(self, business_id=None, checkin_info=None):
         self.business_id = business_id
         self.checkin_info = checkin_info
 
     def __repr__(self):
-        return "Checkins for " + str(self.business_id)
+        try:
+            return "Checkins for " + str(self.business_id)
+        except:
+            return "Checkin"

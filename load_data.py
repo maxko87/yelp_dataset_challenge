@@ -8,7 +8,7 @@ import json
 
 data_path = "data/"
 
-def load_object(object_name, number=-1):
+def load_objects(object_name, number=-1):
     object_path = data_path + object_name + ".json"
     f = open(object_path)
     all_objects = []
@@ -32,7 +32,12 @@ def load_object(object_name, number=-1):
             break
     return all_objects
 
+'''
+Returns a dictionary of all object types.
+'''
+def load_all_objects(number=-1):
+    d = {}
+    for object_type in ["business", "checkin", "review", "user"]:
+        d[object_type] = load_objects(object_type, number)
+    return d
 
-
-businesses = load_object("business", 100)
-print businesses
