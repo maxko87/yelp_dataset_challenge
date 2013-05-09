@@ -22,7 +22,7 @@ def load_objects(object_name, number=-1):
             this_object = Business()
         elif object_name == "checkin":
             this_object = Checkin()
-        elif object_name == "review":
+        elif object_name == "review" or object_name == "review_short":
             this_object = Review()
 
         for param in object_json:
@@ -30,6 +30,7 @@ def load_objects(object_name, number=-1):
         all_objects += [this_object]
         if i == number:
             break
+        i += 1
     return all_objects
 
 '''
