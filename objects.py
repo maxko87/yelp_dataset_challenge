@@ -1,4 +1,4 @@
-class YelpObject():
+class YelpObject(object):
 
     def __str__(self):
         return self.__repr__()

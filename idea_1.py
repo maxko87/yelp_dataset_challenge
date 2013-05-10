@@ -8,15 +8,20 @@ businesses' popularity.
 '''
 
 import load_data, cPickle as pickle, time, pprint
+from objects import *
 from networkx import *
+from helpers import *
 pp = pprint.PrettyPrinter(indent=4)
 start = time.clock()
+
+NUM_REVIEWS = 500 # limiting factor for speed of the code. only up to 1000 will run reasonably fast
+
 
 businesses = load_data.load_objects("business")
 print "businesses loaded: " + str(time.clock() - start)
 users = load_data.load_objects("user")
 print "users loaded: " + str(time.clock() - start)
-reviews = load_data.load_objects("review", 1000)
+reviews = load_data.load_objects("review", NUM_REVIEWS)
 print "reviews loaded: " + str(time.clock() - start)
 
 business_dict = {}
@@ -28,30 +33,48 @@ for u in users:
 
 print "dicts loaded: " + str(time.clock() - start)
 
-
 G = nx.Graph()
-
-'''
-for b in business_dict.values():
-    G.add_node(b)
-for u in user_dict.values():
-    G.add_node(u)
-print "all nodes added: " + str(time.clock() - start)
-'''
 
 for r in reviews:
     if r.user_id in user_dict.keys() and b.business_id in business_dict.keys():
         user = user_dict[r.user_id]
         business = business_dict[r.business_id]
         G.add_edge(user, business)
-        G.edge[user][business]['weight'] = r.stars
+        G.edge[user][business]['weight'] = r.stars # r.stars or r.votes[funny, useful, cool]
 
 print "graph fully loaded: " + str(time.clock() - start)
 
-pp.pprint( nx.betweenness_centrality(G) )
+# pick your poison
+centrality = nx.degree_centrality(G)       # n(500)=0.93
+#centrality = nx.betweenness_centrality(G)  # n(500)=0.76
+#centrality = nx.closeness_centrality(G)    # n(500)=0.92
+#centrality = nx.eigenvector_centrality(G)  # n(500)=0.92
+
+print "centralities calculated: " + str(time.clock() - start)
+
+pp.pprint(centrality)
+
+# store the business name and two metric we wish to find the correlation between
+businesses = []
+ratings = []
+centralities = []
+
+for b_or_u in centrality.keys():
+    if type(b_or_u) == Business and centrality[b_or_u] > 0:
+        b = b_or_u
+        businesses += [b.name]
+        ratings += [b.stars]
+        centralities += [centrality[b]]
+
+print "nonzero centralities saved: " + str(time.clock() - start)
+
+print "CORRELATION: " + str(correlation(ratings, centralities))
 
 
 
-# first, create a mapping of user -> [businesses rated]
-# second, create a mapping of (b1, b2) -> number of users rating both 
+
+
+
+
+
 
