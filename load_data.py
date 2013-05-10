@@ -26,7 +26,7 @@ def load_objects(object_name, number=-1):
             this_object = Review()
 
         for param in object_json:
-            setattr(this_object, param, object_json[param])     
+            setattr(this_object, param, object_json[param])
         all_objects += [this_object]
         if i == number:
             break
