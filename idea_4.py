@@ -20,7 +20,7 @@ businesses = load_data.load_objects("business")
 business_dict = {}
 for b in businesses:
     business_dict[b.business_id] = b
-reviews = load_data.load_objects("review", 20000)
+reviews = load_data.load_objects("review", 30000)
 
 # first, create a mapping of user -> [businesses rated]
 # second, create a mapping of (b1, b2) -> number of users rating both 
