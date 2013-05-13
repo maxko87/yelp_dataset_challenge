@@ -11,23 +11,29 @@ graph businesses as nodes, edges based on num users rating both of those busines
     - e.g. high weight edges expected between nodes that are either close in location, same type of food, etc.
         - what if neither of those explain the similarity fully? we look at review texts to find out why
 '''
-
+from objects import *
+from networkx import *
+from helpers import *
 import load_data
 
-#businesses = load_data.load_objects("business", 1000)
-#users = load_data.load_objects("user", 5000)
-reviews = load_data.load_objects("review", 50000)
+businesses = load_data.load_objects("business")
+business_dict = {}
+for b in businesses:
+    business_dict[b.business_id] = b
+reviews = load_data.load_objects("review", 20000)
 
 # first, create a mapping of user -> [businesses rated]
 # second, create a mapping of (b1, b2) -> number of users rating both 
 first = {}
-for review in reviews:
+for index, review in enumerate(reviews):
+    if index%1000 == 0:
+        print index
     if review.user_id in first.keys():
         first[review.user_id] += [review.business_id]
     else:
         first[review.user_id] = [review.business_id]
 
-#print "first: " + str(first)
+print "number of users: " + str(len(first))
 
 second = {}
 for user_id in first.keys():
@@ -43,8 +49,14 @@ for user_id in first.keys():
                 else:
                     second[key] = 1
 
-print len(second)
+print "number of business pairs: " +  str(len(second))
+
+G = nx.Graph()
+
 for key in second.keys():
     if second[key] > 1:
-        print key, second[key]
+        print key
+    b1_id, b2_id = key.split("_AND_")
+    G.add_edge(business_dict[b1_id], business_dict[b2_id])
+
 

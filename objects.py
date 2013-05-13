@@ -46,13 +46,14 @@ class Business(YelpObject):
 
 class Review(YelpObject):
     
-    def __init__(self, business_id=None, user_id=None, stars=None, text=None, date=None, votes=None):
+    def __init__(self, business_id=None, user_id=None, stars=None, text=None, date=None, votes=None, get_text=False):
         self.business_id = business_id
         self.user_id = user_id
         self.stars = stars
-        self.text = text
         self.date = date
         self.votes = votes
+        if get_text:
+            self.text = text
 
     def __repr__(self):
         try:

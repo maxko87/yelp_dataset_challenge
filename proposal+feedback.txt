@@ -1,0 +1,27 @@
+For our project we plan on looking at the Yelp dataset and analyzing different relationships and metrics between the users, businesses, and reviews in an attempt to identify trends or properties of a graph that could prove useful to Yelp or business owners. A few of our ideas are listed below:
+
+ 
+
+1) Construct a bipartite graph with users and businesses as the nodes. When a user rates a business, a link is created.  Edges can be weighted with different metrics, such as the star rating, or the number of “useful” votes the review got.  We could then compute different centrality measures for the businesses and analyze them to determine how they may relate to a businesses’ popularity.
+
+ 
+
+2) Identify a metric that is characteristic of fake reviews.  Using a similar graph as before, is there a certain property of nodes that lends itself to a higher probability that a user writes a fake review?  I.e. if a user has a degree of only 1 or 2, are the reviews they write more likely to be fake?  A twist on this would be to use words in the text of the review as one side of the bipartite graph instead of businesses, compute a centrality-like measure for the words and users, and use values of this to determine if a review is fake.
+
+ 
+
+3) Identify popular areas of town.  Given a fully connected graph where businesses are the nodes and edges are weighted by the physical distance between businesses (computed from latitude and longitude),  can we identify a region of town that is more popular or has more higher rated businesses with an eigenvector-centrality-like measure?
+
+ 
+
+4) Another graph that we could look at would be one where businesses are nodes, and edges are present if a user has rated both of the businesses.  Classifying the nodes according to other data we have (like their category), we could use metrics of the graph to determine if we can draw conclusions on either a businesses’ popularity (star rating), or the actions of users (do users typically like to rate only businesses of a certain type, or are relationships such as: “Users who rate two Chinese restaurants are also likely to rate a Mexican restaurant” that we can determine from the data.)
+
+
+
+
+
+Hi Tim, Max,
+I read through your proposal on analyzing different relationships and metrics between the users and businesses. All four ideas you are outlining look quite interesting.
+It is better to aim at delivering a crisp message in your presentation and paper, so it might be best to focus on only, say, two of the ideas (the ones that appeal the most to you), and go deeper with them. I like 2, 3 and 4 best. I find 4 the most concrete and promising one, that's just my taste though: an analysis like the one you propose in 4 could yield insight about consumer behavior in a city or part of the city, that might be indicative of a latest trend.
+For your second idea on identfifying fake reviews: what would the ground truth? If your centrality measure tells you that a review is fake, how do we know that this decision is right? What guarantees can you provide for performance? Could you test your decision rule on fake and real reviews?
+Good luck!

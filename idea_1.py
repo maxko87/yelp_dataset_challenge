@@ -33,28 +33,40 @@ for u in users:
 
 print "dicts loaded: " + str(time.clock() - start)
 
-G = nx.Graph()
+G = nx.DiGraph()
+#G = nx.Graph()
 
 for r in reviews:
     if r.user_id in user_dict.keys() and b.business_id in business_dict.keys():
         user = user_dict[r.user_id]
         business = business_dict[r.business_id]
-        G.add_edge(user, business)
-        G.edge[user][business]['weight'] = r.stars # r.stars or r.votes[funny, useful, cool]
+        G.add_edge(business, user)
+        G.edge[business][user]['weight'] = r.stars # r.stars or r.votes[funny, useful, cool]
 
 print "graph fully loaded: " + str(time.clock() - start)
 
-# pick your poison
-centrality = nx.degree_centrality(G)       # n(500)=0.93
+init_weights = {} # for pagerank
+for node in G:  
+    if type(node) == Business:
+        init_weights[node] = node.review_count #node.stars or node.review_count
+    elif type(node) == User:
+        init_weights[node] = 1
+
+# pick a centrality
+#centrality = nx.degree_centrality(G)       # n(500)=0.93
 #centrality = nx.betweenness_centrality(G)  # n(500)=0.76
-#centrality = nx.closeness_centrality(G)    # n(500)=0.92
-#centrality = nx.eigenvector_centrality(G)  # n(500)=0.92
+#centrality = nx.closeness_centrality(G, distance=True)    # n(500, false)=0.92, n(500, r.stars) = .80
+    # n(500, funny)=.65, n(500, useful)=.59, n(500, cool)=.61
+#centrality = nx.eigenvector_centrality(G)  # does not converge
+centrality = nx.pagerank(G, personalization=init_weights) 
+    #n(500, false)=.98, n(500, stars)=.995, n(500, review_count)=.91
+
 
 print "centralities calculated: " + str(time.clock() - start)
 
-pp.pprint(centrality)
+#pp.pprint(centrality)
 
-# store the business name and two metric we wish to find the correlation between
+# store the business name and two metrics we wish to find the correlation between
 businesses = []
 ratings = []
 centralities = []
