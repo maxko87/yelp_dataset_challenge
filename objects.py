@@ -46,7 +46,7 @@ class Business(YelpObject):
 
 class Review(YelpObject):
     
-    def __init__(self, business_id=None, user_id=None, stars=None, text=None, date=None, votes=None, get_text=False):
+    def __init__(self, business_id=None, user_id=None, stars=None, text=None, date=None, votes=None, get_text=True):
         self.business_id = business_id
         self.user_id = user_id
         self.stars = stars

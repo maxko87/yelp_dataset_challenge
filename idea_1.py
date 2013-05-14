@@ -14,38 +14,41 @@ from helpers import *
 pp = pprint.PrettyPrinter(indent=4)
 start = time.clock()
 
-NUM_REVIEWS = 1500 # limiting factor for speed of the code. only up to 1000 will run reasonably fast
+# review are limiting factor for speed of the code. only up to 1000 will run reasonably fast
 
+def get_bipartite_graph(NUM_REVIEWS = 1500):
+    businesses = load_data.load_objects("business")
+    print "businesses loaded: " + str(time.clock() - start)
+    users = load_data.load_objects("user")
+    print "users loaded: " + str(time.clock() - start)
+    reviews = load_data.load_objects("review", NUM_REVIEWS)
+    print "reviews loaded: " + str(time.clock() - start)
 
-businesses = load_data.load_objects("business")
-print "businesses loaded: " + str(time.clock() - start)
-users = load_data.load_objects("user")
-print "users loaded: " + str(time.clock() - start)
-reviews = load_data.load_objects("review", NUM_REVIEWS)
-print "reviews loaded: " + str(time.clock() - start)
+    business_dict = {}
+    for b in businesses:
+        business_dict[b.business_id] = b
+    user_dict = {}
+    for u in users:
+        user_dict[u.user_id] = u
 
-business_dict = {}
-for b in businesses:
-    business_dict[b.business_id] = b
-user_dict = {}
-for u in users:
-    user_dict[u.user_id] = u
+    print "dicts loaded: " + str(time.clock() - start)
 
-print "dicts loaded: " + str(time.clock() - start)
+    #G = nx.DiGraph()
+    G = nx.Graph()
 
-#G = nx.DiGraph()
-G = nx.Graph()
+    for index, r in enumerate(reviews):
+        if (index % 100) == 0:
+            print index
+        if r.user_id in user_dict.keys() and b.business_id in business_dict.keys():
+            user = user_dict[r.user_id]
+            business = business_dict[r.business_id]
+            G.add_edge(business, user)
+            #G.edge[business][user]['weight'] = r.stars # r.stars or r.votes[funny, useful, cool]
 
-for index, r in enumerate(reviews):
-    if (index % 100) == 0:
-        print index
-    if r.user_id in user_dict.keys() and b.business_id in business_dict.keys():
-        user = user_dict[r.user_id]
-        business = business_dict[r.business_id]
-        G.add_edge(business, user)
-        G.edge[business][user]['weight'] = r.stars # r.stars or r.votes[funny, useful, cool]
+    print "graph fully loaded: " + str(time.clock() - start)
+    return G
 
-print "graph fully loaded: " + str(time.clock() - start)
+G = get_bipartite_graph()
 
 init_weights = {} # for pagerank
 for node in G:  

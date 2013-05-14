@@ -16,47 +16,54 @@ from networkx import *
 from helpers import *
 import load_data
 
-businesses = load_data.load_objects("business")
-business_dict = {}
-for b in businesses:
-    business_dict[b.business_id] = b
-reviews = load_data.load_objects("review", 30000)
+def get_graph(NUM_REVIEWS=30000):
 
-# first, create a mapping of user -> [businesses rated]
-# second, create a mapping of (b1, b2) -> number of users rating both 
-first = {}
-for index, review in enumerate(reviews):
-    if index%1000 == 0:
-        print index
-    if review.user_id in first.keys():
-        first[review.user_id] += [review.business_id]
-    else:
-        first[review.user_id] = [review.business_id]
+    businesses = load_data.load_objects("business")
+    business_dict = {}
+    for b in businesses:
+        business_dict[b.business_id] = b
+    reviews = load_data.load_objects("review", NUM_REVIEWS)
 
-print "number of users: " + str(len(first))
+    # first, create a mapping of user -> [businesses rated]
+    # second, create a mapping of (b1, b2) -> number of users rating both 
+    first = {}
+    for index, review in enumerate(reviews):
+        if index%1000 == 0:
+            print index
+        if 'Restaurants' not in business_dict[review.business_id].categories:
+            continue
+        if review.user_id in first.keys():
+            first[review.user_id] += [review.business_id]
+        else:
+            first[review.user_id] = [review.business_id]
 
-second = {}
-for user_id in first.keys():
-    for b1 in first[user_id]:
-        for b2 in first[user_id]:
-            if b1 != b2:
-                # for b1=123, b2=524, we use key = 123_AND_524
-                key = [b1, b2]
-                sorted(key)
-                key = '_AND_'.join(key)
-                if set(key) in second.keys():
-                    second[key] += 1
-                else:
-                    second[key] = 1
+    print "number of users: " + str(len(first))
 
-print "number of business pairs: " +  str(len(second))
+    second = {}
+    for user_id in first.keys():
+        for b1 in first[user_id]:
+            for b2 in first[user_id]:
+                if b1 != b2:
+                    # for b1=123, b2=524, we use key = 123_AND_524
+                    key = [b1, b2]
+                    sorted(key)
+                    key = '_AND_'.join(key)
+                    if set(key) in second.keys():
+                        second[key] += 1
+                    else:
+                        second[key] = 1
 
-G = nx.Graph()
+    print "number of business pairs: " +  str(len(second))
 
-for key in second.keys():
-    if second[key] > 1:
-        print key
-    b1_id, b2_id = key.split("_AND_")
-    G.add_edge(business_dict[b1_id], business_dict[b2_id])
+    G = nx.Graph()
+
+    for key in second.keys():
+        if second[key] > 1:
+            print key
+        b1_id, b2_id = key.split("_AND_")
+        G.add_edge(business_dict[b1_id], business_dict[b2_id])
+
+    return G
+
 
 
