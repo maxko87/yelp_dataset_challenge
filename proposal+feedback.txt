@@ -1,3 +1,11 @@
+Other ideas:
+    calculate keywords associated with particular parts of town based on reviews
+    find underrated businesses - have a low average review, but only because reviewers
+        of that business tended to be harsher critics
+
+
+
+
 For our project we plan on looking at the Yelp dataset and analyzing different relationships and metrics between the users, businesses, and reviews in an attempt to identify trends or properties of a graph that could prove useful to Yelp or business owners. A few of our ideas are listed below:
 
  

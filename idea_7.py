@@ -12,7 +12,6 @@ from helpers import *
 import load_data, idea_1, idea_6
 import re
 
-
 def get_fake_coeff(review):
     G = idea_1.get_bipartite_graph()
 

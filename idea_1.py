@@ -16,7 +16,7 @@ start = time.clock()
 
 # review are limiting factor for speed of the code. only up to 1000 will run reasonably fast
 
-def get_bipartite_graph(NUM_REVIEWS = 1500):
+def get_bipartite_graph(NUM_REVIEWS = 3000):
     businesses = load_data.load_objects("business")
     print "businesses loaded: " + str(time.clock() - start)
     users = load_data.load_objects("user")
@@ -33,8 +33,8 @@ def get_bipartite_graph(NUM_REVIEWS = 1500):
 
     print "dicts loaded: " + str(time.clock() - start)
 
-    #G = nx.DiGraph()
-    G = nx.Graph()
+    G = nx.DiGraph()
+    #G = nx.Graph()
 
     for index, r in enumerate(reviews):
         if (index % 100) == 0:
@@ -53,7 +53,8 @@ G = get_bipartite_graph()
 init_weights = {} # for pagerank
 for node in G:  
     if type(node) == Business:
-        init_weights[node] = node.stars #node.stars or node.review_count
+        #init_weights[node] = node.stars #node.stars or node.review_count
+        init_weights[node] = 1
     elif type(node) == User:
         init_weights[node] = 1
 
@@ -67,9 +68,9 @@ for node in G:
 
     # n(1500, false)=.82, n(1500, r.stars)=.78
 
-centrality = nx.eigenvector_centrality(G, tol=.01)  # converges with tol >=.01
+#centrality = nx.eigenvector_centrality(G, tol=.01)  # converges with tol >=.01
     #n(500)=.83, n(1500)=.75
-#centrality = nx.pagerank(G, personalization=init_weights) 
+centrality = nx.pagerank(G, personalization=init_weights)  
     #n(500, false)=.98, n(500, stars)=.995, n(500, review_count)=.91
     #n(3000, stars)=.994
 
